@@ -1,0 +1,9 @@
+README.md
+setup.cfg
+setup.py
+middleware/__init__.py
+middleware/permission_middleware.py
+sparrow_django_common.egg-info/PKG-INFO
+sparrow_django_common.egg-info/SOURCES.txt
+sparrow_django_common.egg-info/dependency_links.txt
+sparrow_django_common.egg-info/top_level.txt
