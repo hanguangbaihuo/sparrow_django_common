@@ -1,2 +1,0 @@
-middleware
-sparrow_django_common
