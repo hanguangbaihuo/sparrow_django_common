@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: sparrow-django-common
-Version: 0.0.2
+Version: 0.0.1
 Summary: Including a variety of common middleware
 Home-page: https://github.com/hanguangbaihuo/sparrow_django_common.git
 Author: hg
