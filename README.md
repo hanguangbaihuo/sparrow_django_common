@@ -35,7 +35,7 @@ PERMISSION_MIDDLEWARE = {
 
 #### 三、注册中间件
 > 将中间件注册到 MIDDLEWARE_CLASSES:
-> 'sparrow_django_common.middleware.methodconvert.MethodConvertMiddleware'， #权限中间件
+> 'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware'， #权限中间件
 > 'sparrow_django_common.middleware.methodconvert.MethodConvertMiddleware' # 兼容阿里请求方式中间件
 
 
