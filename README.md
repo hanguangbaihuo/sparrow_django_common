@@ -47,8 +47,18 @@ PERMISSION_MIDDLEWARE = {
         - port : 端口
    -  FILTER_PATH : [] ,使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
    -  METHOD_MAP : ('PUT', 'DELETE',)  兼容阿里请求方式中间件配置， 保持默认的即可
+   
+## METHOD中间件
+#### 配置METHOD中间件需要的参数
+> 将以下参数添加到settings.py
+```
+METHOD_MIDDLEWARE = {
+    "METHOD_MAP": ('PUT', 'DELETE',), 
+}
+```
 
-#### 三、注册中间件
+
+#### 注册中间件
 > 将中间件注册到 MIDDLEWARE_CLASSES:
 ```
     'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware'，#权限中间件

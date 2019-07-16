@@ -2,7 +2,7 @@ from sparrow_django_common.utils.get_settings_value import GetSettingsValue
 
 
 get_value = GetSettingsValue()
-METHOD_MAP = get_value.get_middleware_value('METHOD_MAP')
+METHOD_MAP = get_value.get_middleware_value('METHOD_MIDDLEWARE', 'METHOD_MAP')
 if not METHOD_MAP:
     METHOD_MAP = ('PUT', 'DELETE')
 

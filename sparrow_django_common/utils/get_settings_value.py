@@ -12,7 +12,7 @@ class GetSettingsValue(object):
             raise NotImplementedError("没有配置这个参数%s" % name)
         return value
 
-    def __get_middleware_value(self, name):
+    def __get_middleware_value(self, middleware_class, name):
         """
         获取中间件服务的配置数据,  PERMISSION_SERVICE 层数据， 
         PERMISSION_MIDDLEWARE = {
@@ -29,13 +29,13 @@ class GetSettingsValue(object):
             "FILTER_PATH" : ['']
         }
         """
-        service_value = self.__get_settings_value("PERMISSION_MIDDLEWARE")
+        service_value = self.__get_settings_value(middleware_class)
         value = service_value.get(name, None)
         if value == '' or value is None:
             raise NotImplementedError("没有配置这个参数%s" % name)
         return value
 
-    def __get_middleware_service_value(self, service_name, key):
+    def __get_middleware_service_value(self, middleware_class, service_name, key):
         """
         获取中间件中服务的具体配置的值, PERMISSION_SERVICE 下的 name 层数据
         PERMISSION_MIDDLEWARE = {
@@ -54,10 +54,18 @@ class GetSettingsValue(object):
 
 
         """
-        middleware_value = self.__get_middleware_value(service_name)
+        middleware_value = self.__get_middleware_value(middleware_class, service_name)
         value = middleware_value.get(key, None)
         if value == '' or value is None:
             raise NotImplementedError("没有配置这个参数%s" % service_name,key)
+        return value
+    
+    def __get_middleware_value_not_validated(self, middleware_class, service_name, key):
+        """获取middleware value 不验证value"""
+        middleware_value = self.__get_middleware_value(middleware_class, service_name)
+        value = middleware_value.get(key, None)
+        if value is None:
+            raise NotImplementedError("没有配置这个参数%s" % service_name, key)
         return value
     
     def get_settings_value(self, name):
@@ -65,12 +73,17 @@ class GetSettingsValue(object):
         value = self.__get_settings_value(name)
         return value
 
-    def get_middleware_value(self, name):
+    def get_middleware_value(self, middleware_class, name):
         """获取中间件服务的值"""
-        value = self.__get_middleware_value(name)
+        value = self.__get_middleware_value(middleware_class, name)
         return value
 
-    def get_middleware_service_value(self, service_name, key):
+    def get_middleware_service_value(self, middleware_class, service_name, key):
         """获取settings具体的服务的具体配置的值"""
-        value = self.__get_middleware_service_value(service_name, key)
+        value = self.__get_middleware_service_value(middleware_class, service_name, key)
+        return value
+
+    def get_middleware_value_not_validated(self, middleware_class, service_name, key):
+        """获取settings中middleware不验证"""
+        value = self.__get_middleware_value_not_validated(middleware_class, service_name, key)
         return value

@@ -28,11 +28,12 @@ class PermissionMiddleware(object):
         self.verification_configuration.valid_permission_svc()
         self.settings_value = GetSettingsValue()
         self.url_join = NormalizeUrl()
-        self.filter_path = self.settings_value.get_middleware_value('FILTER_PATH')
+        self.filter_path = self.settings_value.get_middleware_value(
+            'PERMISSION_MIDDLEWARE', 'FILTER_PATH')
         self.service_name = self.settings_value.get_middleware_service_value(
-            'PERMISSION_SERVICE', 'name')
+            'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'name')
         self.permission_address = self.settings_value.get_middleware_service_value(
-            'PERMISSION_SERVICE', 'address')
+            'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
         self.has_permission = True
 
     def process_request(self, request):
@@ -59,7 +60,7 @@ class PermissionMiddleware(object):
             }
             response = requests.post(url, json=post_data)
             if response.status_code == 404:
-                raise ImproperlyConfigured("请检查settings.py的permission_service配置是否正确")
+                raise ImproperlyConfigured("请检查settings.py的permission_service配置的%s是否正确" % path)
             data = response.json()
             if response.status_code == 500:
                 logger.error(data["message"])
