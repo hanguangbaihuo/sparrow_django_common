@@ -51,7 +51,7 @@ class PermissionMiddleware(object):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
         if all([path, method, user_id]):
             domain = ConsulService().get_service_addr_consul(service='PERMISSION_SERVICE')
-            url = self.url_join.normalizeurl(domain=domain, path=self.permission_address)
+            url = self.url_join.normalize_url(domain=domain, path=self.permission_address)
             post_data = {
                 "path": path,
                 "method": method,

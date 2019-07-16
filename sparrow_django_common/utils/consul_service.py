@@ -21,22 +21,22 @@ class ConsulService(object):
         port = self.settings_value.get_middleware_service_value(service, 'port')
         host = self.settings_value.get_middleware_service_value(service, 'host')
         service_name = self.settings_value.get_middleware_service_value(service, 'name')
-        if host and port and self.run_env not in ("dev", "unit"):
-            domain = "{schema}{address}:{port}".format(schema=schema, address=host, port=port)
-            logger.info("domain={domain}".format(domain=domain))
-            return domain
-        consul_client = consul.Consul(
-            host=self.consul['host'], 
-            port=self.consul['port'], 
-            scheme="http")
-        try:
-            port = consul_client.catalog.service(service_name)[1][0]['ServicePort']
-            address = consul_client.catalog.service(service_name)[1][0]['ServiceAddress']
-        except Exception as ex:
-            raise ImproperlyConfigured("请检查settings.py 的consul配置是否正确")
+        consul_client = consul.Consul(host=self.consul['host'],
+                                      port=self.consul['port'],
+                                      scheme="http")
         if self.run_env in ("dev", "unit"):
             logger.info("run_env=%s, 使用本地地址")
             address = '127.0.0.1'
-        domain = "{schema}{address}:{port}".format(schema=schema, address=address, port=port)
-        logger.info("domain={domain}".format(domain=domain))
-        return domain
+            domain = "{schema}{address}:{port}".format(schema=schema, address=address, port=port)
+            return domain
+        if host and port:
+            domain = "{schema}{address}:{port}".format(schema=schema, address=host, port=port)
+            logger.info("domain={domain}".format(domain=domain))
+            return domain
+        try:
+            port = consul_client.catalog.service(service_name)[1][0]['ServicePort']
+            address = consul_client.catalog.service(service_name)[1][0]['ServiceAddress']
+            domain = "{schema}{address}:{port}".format(schema=schema, address=address, port=port)
+            return domain
+        except Exception:
+            raise ImproperlyConfigured("请检查settings.py 的consul配置是否正确")
