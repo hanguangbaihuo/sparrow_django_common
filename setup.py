@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sparrow_django_common',
-    version='0.0.1',
+    version='0.0.2',
     author="hg",
     description='Including a variety of common middleware',
     license='MIT License',
