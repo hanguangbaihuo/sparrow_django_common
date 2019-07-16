@@ -21,7 +21,7 @@ class ConsulService(object):
         port = self.settings_value.get_middleware_service_value(service, 'port')
         host = self.settings_value.get_middleware_service_value(service, 'host')
         service_name = self.settings_value.get_middleware_service_value(service, 'name')
-        if host and port:
+        if host and port and self.run_env not in ("dev", "unit"):
             domain = "{schema}{address}:{port}".format(schema=schema, address=host, port=port)
             logger.info("domain={domain}".format(domain=domain))
             return domain
@@ -37,6 +37,6 @@ class ConsulService(object):
         if self.run_env in ("dev", "unit"):
             logger.info("run_env=%s, 使用本地地址")
             address = '127.0.0.1'
-        domain = "{schema}{address}:{port}".format(schema=schema, address=address, port=self.port)
+        domain = "{schema}{address}:{port}".format(schema=schema, address=address, port=port)
         logger.info("domain={domain}".format(domain=domain))
         return domain

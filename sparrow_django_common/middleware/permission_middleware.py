@@ -1,6 +1,7 @@
 import requests
 import logging
 from django.http import JsonResponse
+from django.core.exceptions import ImproperlyConfigured
 from rest_framework import status
 from sparrow_django_common.utils.validation_data import VerificationConfiguration
 from sparrow_django_common.utils.consul_service import ConsulService
@@ -57,11 +58,12 @@ class PermissionMiddleware(object):
                 "user_id": user_id
             }
             response = requests.post(url, json=post_data)
+            if response.status_code == 404:
+                raise ImproperlyConfigured("请检查settings.py的permission_service配置是否正确")
             data = response.json()
-            if response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR:
+            if response.status_code == 500:
                 logger.error(data["message"])
                 return True
-            # if response.status_code >= 200 and response.status_code < 300 and data['status']:
             if 200 <= response.status_code < 300 and data['status']:
                 return True
             return False
