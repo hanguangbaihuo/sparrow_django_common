@@ -1,0 +1,10 @@
+*.project
+*.pyc
+*.log
+*.log.*
+.vscode
+.idea
+__pycache__
+sparrow_django_common/__pycache__
+sparrow_django_common/middleware/__pycache__
+sparrow_django_common/utils/__pycache__
