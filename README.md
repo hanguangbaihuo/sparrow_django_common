@@ -69,7 +69,7 @@ PERMISSION_MIDDLEWARE = {
    
    
 #### 注册 PERMISSION_MIDDLEWARE 
-> 将中间件注册到 MIDDLEWARE_CLASSES:
+> 注册中间件
 ```
 MIDDLEWARE_CLASSES = (
     'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware'，#权限中间件
@@ -93,7 +93,7 @@ METHOD_MIDDLEWARE = {
 
 
 #### 注册 METHOD_MIDDLEWARE
-> 将中间件注册到 MIDDLEWARE_CLASSES:
+> 注册中间件
 ```
 MIDDLEWARE_CLASSES = (
     'sparrow_django_common.middleware.methodconvert.MethodConvertMiddleware' # 兼容阿里请求方式中间件
@@ -127,7 +127,7 @@ JWT_AUTHENTICATION_MIDDLEWARE = {
 
 #### 注册 JWT_AUTHENTICATION_MIDDLEWARE
 
-> 将中间件注册到 
+> 注册中间件
 ```
 REST_FRAMEWORK{
     'DEFAULT_AUTHENTICATION_CLASSES': (
