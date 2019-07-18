@@ -8,9 +8,8 @@ class DecodeJwt(object):
 
     def __init__(self, ):
         self.settings_value = GetSettingsValue()
-        self.run_env = self.settings_value.get_settings_value('RUN_ENV')
         self.secret = self.settings_value.get_middleware_value(
-            'JWT_AUTHENTICATION_MIDDLEWARE', 'JWT_SECRET')[self.run_env]
+            'JWT_AUTHENTICATION_MIDDLEWARE', 'JWT_SECRET')
 
     def decode_jwt(self, token):
         secret = self.secret
