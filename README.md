@@ -1,8 +1,28 @@
 # sparrow_django_common
 >sparrow的公用模块，主要包含各种通用中间件
 
-## 权限验证中间件
+* * *
 
+## 安装中间件
+> 1. 在requirements.txt 中添加：
+```
+git+https://github.com/hanguangbaihuo/sparrow_django_common.git
+```
+> 2. 在终端执行
+```
+pip install requirements.txt
+```
+
+* * *
+
+## PERMISSION_MIDDLEWARE (权限验证中间件)
+> 描述
+```
+                            (url + method + user_id)
+                                        |               / 有权限则允许通过
+    request -> PermissionMiddleware ---https---> 权限模块
+                                                        \ 无权限则返回HTTP 403错误
+```
 
 #### 一、配置"dev"环境的支持
 > 提示：dev 环境下， 需要将权限验证服务转发到本地。
@@ -14,7 +34,7 @@
   
 > 2、 在终端运行dev.sh ,将服务转发到本地
 
-#### 二、配置中间件需要的参数
+#### 二、配置PERMISSION_MIDDLEWARE需要的参数
 > 将以下参数添加到settings.py 
 
 ```
@@ -32,9 +52,9 @@ PERMISSION_MIDDLEWARE = {
         "port": 8500, # 端口
     },
     "FILTER_PATH" : [''], # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
-    "METHOD_MAP" : ('PUT', 'DELETE',) # 兼容阿里请求方式中间件配置， 保持默认的即可
 }
 ```
+
 > 描述
  - PERMISSION_MIDDLEWARE : 中间件配置
    -  PERMISSION_SERVICE ：权限验证配置
@@ -46,25 +66,74 @@ PERMISSION_MIDDLEWARE = {
         - host : 主机地址
         - port : 端口
    -  FILTER_PATH : [] ,使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
-   -  METHOD_MAP : ('PUT', 'DELETE',)  兼容阿里请求方式中间件配置， 保持默认的即可
    
-## METHOD中间件
-#### 配置METHOD中间件需要的参数
+   
+#### 注册 PERMISSION_MIDDLEWARE 
+> 将中间件注册到 MIDDLEWARE_CLASSES:
+```
+MIDDLEWARE_CLASSES = (
+    'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware'，#权限中间件
+)
+```
+
+* * *
+   
+## METHOD_MIDDLEWARE
+> 兼容阿里不支持 put/delete 请求
+#### 配置METHOD_MIDDLEWARE需要的参数
 > 将以下参数添加到settings.py
 ```
 METHOD_MIDDLEWARE = {
     "METHOD_MAP": ('PUT', 'DELETE',), 
 }
 ```
+> 描述
+ - METHOD_MIDDLEWARE : 中间件配置
+   -  METHOD_MAP ：中间件兼容阿里云不支持put/delete请求的配置
 
 
-#### 注册中间件
+#### 注册 METHOD_MIDDLEWARE
 > 将中间件注册到 MIDDLEWARE_CLASSES:
 ```
-    'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware'，#权限中间件
+MIDDLEWARE_CLASSES = (
     'sparrow_django_common.middleware.methodconvert.MethodConvertMiddleware' # 兼容阿里请求方式中间件
+)
 ```
 
+
+
+* * *
+
+## JWT_AUTHENTICATION_MIDDLEWARE
+> 描述：
+```buildoutcfg
+
+```
+
+#### 配置 JWT_AUTHENTICATION_MIDDLEWARE 中间件需要的参数
+> 将以下参数添加到settings.py
+```
+JWT_AUTHENTICATION_MIDDLEWARE = {
+    "JWT_SECRET": {
+        # JWT 密钥
+        "pro": "w(9c%u@z$^*wiue7^wh)+&c2q$3(egzcvson@-x5i09^$vf+syh",
+        "dev": "w(9c%u@z$^*wiue7^wh)+&c2q$3(egzcvson@-x5i09^$vf+syh",
+        "test": "w(9c%u@z$^*wiue7^wh)+&c2q$3(egzcvson@-x5i09^$vf+syh",
+        "unit": "sdfasdfas",
+    },
+    "USER_CLASS_PATH": "sparrow_django_common.common.user.User", 
+}
+``` 
+
+#### 注册 JWT_AUTHENTICATION_MIDDLEWARE
+
+> 将中间件注册到 
+```
+REST_FRAMEWORK{
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'sparrow_django_common.middleware.authentication.JWTAuthentication',
+    }
+```
 
 
 
