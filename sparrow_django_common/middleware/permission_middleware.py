@@ -7,10 +7,11 @@ from sparrow_django_common.utils.validation_data import VerificationConfiguratio
 from sparrow_django_common.utils.consul_service import ConsulService
 from sparrow_django_common.utils.get_settings_value import GetSettingsValue
 from sparrow_django_common.utils.normalize_url import NormalizeUrl
+from  sparrow_django_common.base_middlware.base_middleware import MiddlewareMixin
 logger = logging.getLogger(__name__)
 
 
-class PermissionMiddleware(object):
+class PermissionMiddleware(MiddlewareMixin):
     """
     权限中间件
     使用方法：
@@ -23,36 +24,36 @@ class PermissionMiddleware(object):
                                                         \ 无权限则返回HTTP 403错误
 
     """
-    def __init__(self):
-        self.verification_configuration = VerificationConfiguration()
-        self.verification_configuration.valid_permission_svc()
-        self.settings_value = GetSettingsValue()
-        self.url_join = NormalizeUrl()
-        self.filter_path = self.settings_value.get_middleware_value(
-            'PERMISSION_MIDDLEWARE', 'FILTER_PATH')
-        self.service_name = self.settings_value.get_middleware_service_value(
-            'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'name')
-        self.permission_address = self.settings_value.get_middleware_service_value(
-            'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
-        self.has_permission = True
+    VERIFICATION_CONGIGURATION = VerificationConfiguration()
+    VERIFICATION_CONGIGURATION.valid_permission_svc()
+    SETTINGS_VALUE = GetSettingsValue()
+    URL_JOIN = NormalizeUrl()
+    FILTER_PATH = SETTINGS_VALUE.get_middleware_value(
+        'PERMISSION_MIDDLEWARE', 'FILTER_PATH')
+    SERVICE_NAME = SETTINGS_VALUE.get_middleware_service_value(
+        'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'name')
+    PERMISSION_ADDRESS = SETTINGS_VALUE.get_middleware_service_value(
+        'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
+    HAS_PERMISSION = True
 
     def process_request(self, request):
         # 验证中间件位置
-        self.verification_configuration.verify_middleware_location(request)
+
+        self.VERIFICATION_CONGIGURATION.verify_middleware_location(request)
         path = request.path
         method = request.method.upper()
         # 只校验有 不在 FILTER_PATH 中的url
-        if path not in self.filter_path:
+        if path not in self.FILTER_PATH:
             if request.user.id:
-                self.has_permission = self.valid_permission(path, method, request.user.id)
-            if not self.has_permission:
+                self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
+            if not self.HAS_PERMISSION:
                 return JsonResponse({"message": "无访问权限"}, status=status.HTTP_403_FORBIDDEN)
 
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
         if all([path, method, user_id]):
             domain = ConsulService().get_service_addr_consul(service='PERMISSION_SERVICE')
-            url = self.url_join.normalize_url(domain=domain, path=self.permission_address)
+            url = self.URL_JOIN.normalize_url(domain=domain, path=self.PERMISSION_ADDRESS)
             post_data = {
                 "path": path,
                 "method": method,
