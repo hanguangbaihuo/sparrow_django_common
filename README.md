@@ -114,7 +114,7 @@ MIDDLEWARE_CLASSES = (
 > 将以下参数添加到settings.py
 ```
 JWT_AUTHENTICATION_MIDDLEWARE = {
-    "JWT_SECRET": "w(9c%u@z$^*wiue7^wh)+&c2q$3(egzcvson@-x5i09^$vf+syh",
+    "JWT_SECRET": "问 tianyi",
     "USER_CLASS_PATH": "sparrow_django_common.common.user.User", 
 }
 ``` 
