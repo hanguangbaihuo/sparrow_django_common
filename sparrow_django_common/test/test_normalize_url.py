@@ -8,10 +8,10 @@ class TestURLSplicing(unittest.TestCase):
 
     def setUp(self):
         self.normalize_url = NormalizeUrl()
-        self.scheme_domain = 'http://dongyouliang.com'
-        self.domain = 'dongyouliang.com'
-        self.path = 'api/image/search'
-        self.url = 'http://dongyouliang.com/api/image/search'
+        self.scheme_domain = 'http://d.com'
+        self.domain = 'd.com'
+        self.path = '/search'
+        self.url = 'http://d.com/search'
 
     def test_url_splicing(self):
         """测试"""
