@@ -1,17 +1,18 @@
 import requests
 import logging
-from django.http import JsonResponse
+
 from django.core.exceptions import ImproperlyConfigured
-from rest_framework import status
+
+from rest_framework import permissions
+
 from sparrow_django_common.utils.validation_data import VerificationConfiguration
 from sparrow_django_common.utils.consul_service import ConsulService
 from sparrow_django_common.utils.get_settings_value import GetSettingsValue
 from sparrow_django_common.utils.normalize_url import NormalizeUrl
-from  sparrow_django_common.base_middlware.base_middleware import MiddlewareMixin
 logger = logging.getLogger(__name__)
 
 
-class PermissionMiddleware(MiddlewareMixin):
+class PermissionMiddleware(permissions.BasePermission):
     """
     权限中间件
     使用方法：
@@ -36,9 +37,8 @@ class PermissionMiddleware(MiddlewareMixin):
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
     HAS_PERMISSION = True
 
-    def process_request(self, request):
+    def has_permission(self, request, view):
         # 验证中间件位置
-
         self.VERIFICATION_CONGIGURATION.verify_middleware_location(request)
         path = request.path
         method = request.method.upper()
@@ -46,14 +46,16 @@ class PermissionMiddleware(MiddlewareMixin):
         if path not in self.FILTER_PATH:
             if request.user.id:
                 self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
-            if not self.HAS_PERMISSION:
-                return JsonResponse({"message": "无访问权限"}, status=status.HTTP_403_FORBIDDEN)
+            if self.HAS_PERMISSION:
+                return True
+            return False
 
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
         if all([path, method, user_id]):
             domain = ConsulService().get_service_addr_consul(service='PERMISSION_SERVICE')
-            url = self.URL_JOIN.normalize_url(domain=domain, path=self.PERMISSION_ADDRESS)
+            url = self.URL_JOIN.normalize_url(
+                domain=domain, path=self.PERMISSION_ADDRESS)
             post_data = {
                 "path": path,
                 "method": method,
@@ -61,7 +63,8 @@ class PermissionMiddleware(MiddlewareMixin):
             }
             response = requests.post(url, json=post_data)
             if response.status_code == 404:
-                raise ImproperlyConfigured("请检查settings.py的permission_service配置的%s是否正确" % path)
+                raise ImproperlyConfigured(
+                    "请检查settings.py的permission_service配置的%s是否正确" % path)
             data = response.json()
             if response.status_code == 500:
                 logger.error(data["message"])
