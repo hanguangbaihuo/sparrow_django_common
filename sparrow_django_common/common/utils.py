@@ -9,24 +9,24 @@ USER_CLASS_PATH = 'USER_CLASS_PATH'
 ANONYMOUS_USER_CLASS_PATH = 'ANONYMOUS_USER_CLASS_PATH'
 
 
-def get_settings_value():
+def get_settings_value(jwt_authentication_middleware,user_class_path):
     """Get the data in settings and add value validation"""
     settings_value = GetSettingsValue()
     user_class_path = settings_value.get_middleware_value(
-        JWT_AUTHENTICATION_MIDDLEWARE, USER_CLASS_PATH)
+        jwt_authentication_middleware, user_class_path)
     return user_class_path
 
 
 @functools.lru_cache(maxsize=None)
 def get_user_class():
-    user_class_path = get_settings_value()
+    user_class_path = get_settings_value(JWT_AUTHENTICATION_MIDDLEWARE,USER_CLASS_PATH)
     module_path, cls_name = user_class_path.rsplit(".", 1)
     user_cls = getattr(importlib.import_module(module_path), cls_name)
     return user_cls
 
 @functools.lru_cache(maxsize=None)
 def get_anonymous_user_class():
-    user_class_path = get_settings_value()
+    user_class_path = get_settings_value(JWT_AUTHENTICATION_MIDDLEWARE,ANONYMOUS_USER_CLASS_PATH)
     module_path, cls_name = user_class_path.rsplit(".", 1)
     user_cls = getattr(importlib.import_module(module_path), cls_name)
     return user_cls
