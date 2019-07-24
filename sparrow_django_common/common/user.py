@@ -69,6 +69,7 @@ class AnonymousUser(object):
         return locals()
     payload = property(**payload())
 
+    @property
     def is_authenticated(self):
         return False
 
