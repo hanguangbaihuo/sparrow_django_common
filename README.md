@@ -117,7 +117,8 @@ MIDDLEWARE_CLASSES = (
 ```
 JWT_AUTHENTICATION_MIDDLEWARE = {
     "JWT_SECRET": "问 tianyi",
-    "USER_CLASS_PATH": "sparrow_django_common.common.user.User", 
+    "USER_CLASS_PATH": "sparrow_django_common.common.user.User",
+    "ANONYMOUS_USER_CLASS_PATH": "sparrow_django_common.common.user.AnonymousUser",
 }
 ``` 
 

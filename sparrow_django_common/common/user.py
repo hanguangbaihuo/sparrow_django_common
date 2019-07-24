@@ -51,4 +51,25 @@ class User(object):
 
 
 class AnonymousUser(object):
-    pass
+    def __init__(self,user_id):
+        self._id = user_id
+
+    @property
+    def id(self):
+        return self._id
+
+    def payload():
+        doc = "The payload property."
+        def fget(self):
+            return self._payload
+        def fset(self, value):
+            self._payload = value
+        def fdel(self):
+            del self._payload
+        return locals()
+    payload = property(**payload())
+
+    def is_authenticated(self):
+        return False
+
+    

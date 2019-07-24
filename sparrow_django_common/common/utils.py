@@ -6,6 +6,7 @@ import functools
 
 JWT_AUTHENTICATION_MIDDLEWARE = 'JWT_AUTHENTICATION_MIDDLEWARE'
 USER_CLASS_PATH = 'USER_CLASS_PATH'
+ANONYMOUS_USER_CLASS_PATH = 'ANONYMOUS_USER_CLASS_PATH'
 
 
 def get_settings_value():
@@ -18,6 +19,13 @@ def get_settings_value():
 
 @functools.lru_cache(maxsize=None)
 def get_user_class():
+    user_class_path = get_settings_value()
+    module_path, cls_name = user_class_path.rsplit(".", 1)
+    user_cls = getattr(importlib.import_module(module_path), cls_name)
+    return user_cls
+
+@functools.lru_cache(maxsize=None)
+def get_anonymous_user_class():
     user_class_path = get_settings_value()
     module_path, cls_name = user_class_path.rsplit(".", 1)
     user_cls = getattr(importlib.import_module(module_path), cls_name)
