@@ -31,7 +31,8 @@ class JWTAuthentication(object):
         except Exception as ex:
             logger.error(ex)
             msg = 'Invalid token. auth={0}, error={1}'.format(auth, ex)
-            raise exceptions.AuthenticationFailed(msg)
+            #raise exceptions.AuthenticationFailed(msg)
+            return (None, None)
         return (user, payload)
 
     def get_user(self, user_id, payload):
