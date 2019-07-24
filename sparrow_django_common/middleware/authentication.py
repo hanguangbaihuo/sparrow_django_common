@@ -23,9 +23,8 @@ class JWTAuthentication(object):
         auth = get_authorization_header(request).split()
         # 如果未认证, 返回空
         if not auth or auth[0].lower() != b'token':
-            user_id = None
-            payload = None
-            return self.get_anonymous_user(user_id,payload)
+            anonymous_user =  self.get_anonymous_user(None,None)
+            return (anonymous_user,None)
         try:
             token = auth[1]
             payload = DecodeJwt().decode_jwt(token)
@@ -35,7 +34,8 @@ class JWTAuthentication(object):
             logger.error(ex)
             msg = 'Invalid token. auth={0}, error={1}'.format(auth, ex)
             # raise exceptions.AuthenticationFailed(msg)
-            return self.get_anonymous_user(None,None)
+            anonymous_user = self.get_anonymous_user(None,None)
+            return (anonymous_user,None)
         return (user, payload)
 
     def get_user(self, user_id, payload):
