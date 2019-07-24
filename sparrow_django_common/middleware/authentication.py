@@ -22,7 +22,7 @@ class JWTAuthentication(object):
         auth = get_authorization_header(request).split()
         # 如果未认证, 返回空
         if not auth or auth[0].lower() != b'token':
-            return None
+            return (None, None)
         try:
             token = auth[1]
             payload = DecodeJwt().decode_jwt(token)
