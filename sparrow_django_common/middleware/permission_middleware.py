@@ -44,16 +44,15 @@ class PermissionMiddleware(permissions.BasePermission):
         url = request.META.get('HTTP_REFERER', None)
         # 只校验有 不在 FILTER_PATH 中的url
         if path not in self.FILTER_PATH:
-            if request.user:
+            if request.user and request.user.is_authenticated():
                 self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
-            elif self.HAS_PERMISSION is True:
+            if self.HAS_PERMISSION:
                 return True
-            elif url is not None:
-                if url.__contains__("login"):
-                    return True
-                return False
-            else:
-                return False
+            return False
+        elif url is not None:
+            if url.__contains__("login"):
+                return True
+            return False
         return True
 
     def valid_permission(self, path, method, user_id):

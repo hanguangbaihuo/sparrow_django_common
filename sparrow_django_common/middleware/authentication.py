@@ -37,5 +37,5 @@ class JWTAuthentication(object):
         user.payload = payload
         return user
 
-    def authenticate_header(self):
+    def authenticate_header(self, request):
         return "Token"

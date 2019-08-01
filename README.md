@@ -120,6 +120,7 @@ JWT_AUTHENTICATION_MIDDLEWARE = {
     "USER_CLASS_PATH": "sparrow_django_common.common.user.User", 
 }
 ``` 
+> 参数说明： USER_CLASS_PATH： 路径中的User为中间件的User模版， 可以根据自己的需求重新创建User， 并将自己的User路径按照模版格式放到：USER_CLASS_PATH下 
 
 #### 注册 JWT_AUTHENTICATION_MIDDLEWARE
 
