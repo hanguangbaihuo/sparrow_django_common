@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from sparrow_django_common.utils.get_settings_value import GetSettingsValue
+from sparrow_django_common.utils.common_exceptions import AuthenticationValidError
 
 import importlib
 import functools
@@ -20,5 +21,9 @@ def get_settings_value():
 def get_user_class():
     user_class_path = get_settings_value()
     module_path, cls_name = user_class_path.rsplit(".", 1)
-    user_cls = getattr(importlib.import_module(module_path), cls_name)
+    try:
+        user_cls = getattr(importlib.import_module(module_path), cls_name)
+    except Exception as ex:
+        raise AuthenticationValidError('请检查settings下JWT_AUTHENTICATION_MIDDLEWARE中的USER_CLASS_PATH或'
+                                       'USER_CLASS_PATH路径下的user是否正确')
     return user_cls

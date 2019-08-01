@@ -35,20 +35,25 @@ class PermissionMiddleware(permissions.BasePermission):
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'name')
     PERMISSION_ADDRESS = SETTINGS_VALUE.get_middleware_service_value(
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
-    HAS_PERMISSION = True
+    HAS_PERMISSION = False
 
     def has_permission(self, request, view):
         # 验证中间件位置
-        self.VERIFICATION_CONGIGURATION.verify_middleware_location(request)
         path = request.path
         method = request.method.upper()
+        url = request.META.get('HTTP_REFERER', None)
         # 只校验有 不在 FILTER_PATH 中的url
         if path not in self.FILTER_PATH:
-            if request.user.id:
+            if request.user and request.user.is_authenticated():
                 self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
             if self.HAS_PERMISSION:
                 return True
             return False
+        elif url is not None:
+            if url.__contains__("login"):
+                return True
+            return False
+        return True
 
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
