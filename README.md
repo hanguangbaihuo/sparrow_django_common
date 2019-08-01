@@ -29,7 +29,7 @@ pip install requirements.txt
 
 > 1、权限验证服务转发到本地运行, 编辑项目下的 'dev.sh' 脚本， 添加：
 
-```sparrow-permissioin=$(kubectl get pod -n default |grep sparrow-permissioin -m 1|awk '{print "kubectl port-forward " $1 " 8001:8001 -n default"}')```
+```sparrow-permissioin=$(kubectl get pods -n default | grep sparrow-permissioin | awk '{print "kubectl port-forward "$1 " 8001:8001 -n default"}')```
  
   
 > 2、 在终端运行dev.sh ,将服务转发到本地
