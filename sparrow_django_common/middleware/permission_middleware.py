@@ -66,7 +66,11 @@ class PermissionMiddleware(permissions.BasePermission):
                 "method": method,
                 "user_id": user_id
             }
-            response = requests.post(url, json=post_data)
+            try:
+                response = requests.post(url, json=post_data)
+            except Exception as ex:
+                logger.error(ex)
+                return True
             if response.status_code == 404:
                 raise ImproperlyConfigured(
                     "请检查settings.py的permission_service配置的%s是否正确" % path)
