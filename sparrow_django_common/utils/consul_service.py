@@ -10,19 +10,21 @@ class ConsulService(object):
     """Consul服务， 接收服务名称， 返回域名"""
     def __init__(self):
         self.settings_value = GetSettingsValue()
-        self.consul = self.settings_value.get_middleware_value('PERMISSION_MIDDLEWARE', 'CONSUL')
         self.run_env = self.settings_value.get_settings_value('RUN_ENV')
 
-    def get_service_addr_consul(self, service, schema=""):
+    def get_service_addr_consul(self, service_dependencies, service, schema=""):
         """
         获取服务的consul地址
         优先环境变量，如未配置环境变量，从consul中找服务， 如果是("dev", "unit")， 则使用127.0.0.1
         """
-        port = self.settings_value.get_middleware_service_value('PERMISSION_MIDDLEWARE', service, 'port')
-        host = self.settings_value.get_middleware_value_not_validated('PERMISSION_MIDDLEWARE', service, 'host')
-        service_name = self.settings_value.get_middleware_service_value('PERMISSION_MIDDLEWARE', service, 'name')
-        consul_client = consul.Consul(host=self.consul['host'],
-                                      port=self.consul['port'],
+        port = self.settings_value.get_middleware_service_value(service_dependencies, service, 'port')
+        host = self.settings_value.get_middleware_value_not_validated(service_dependencies, service, 'host')
+        service_name = self.settings_value.get_middleware_service_value(service_dependencies, service, 'name')
+
+        consul_value = self.settings_value.get_settings_value('CONSUL_CLIENT_ADDR')
+
+        consul_client = consul.Consul(host=consul_value['host'],
+                                      port=consul_value['port'],
                                       scheme="http")
         if self.run_env in ("dev", "unit"):
             logger.info("run_env=%s, 使用本地地址")

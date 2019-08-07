@@ -9,12 +9,10 @@ class VerificationConfiguration(object):
         """验证settings中的配置, 如有新增的配置，请在此处加上验证"""
         try:
             self.PERMISSION_SERVICE = settings.PERMISSION_MIDDLEWARE['PERMISSION_SERVICE']
-            self.CONSUL = settings.PERMISSION_MIDDLEWARE['CONSUL']
             self.FILTER_PATH = settings.PERMISSION_MIDDLEWARE['FILTER_PATH']
             self.PERMISSION_SERVICE['name']
             self.PERMISSION_SERVICE['host']
             self.PERMISSION_SERVICE['address']
-            self.CONSUL['host']
         except KeyError as ex:
             raise NotImplementedError("没有配置这个参数%s"% ex)
 
