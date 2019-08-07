@@ -44,8 +44,13 @@ class PermissionMiddleware(permissions.BasePermission):
         url = request.META.get('HTTP_REFERER', None)
         # 只校验有 不在 FILTER_PATH 中的url
         if path not in self.FILTER_PATH:
-            if request.user and request.user.is_authenticated():
-                self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
+            if request.user:
+                try:
+                    if request.user.is_authenticated():
+                        self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
+                except:
+                    if request.user.is_authenticated:
+                        self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
             if self.HAS_PERMISSION:
                 return True
             return False
@@ -73,7 +78,7 @@ class PermissionMiddleware(permissions.BasePermission):
                 return True
             if response.status_code == 404:
                 raise ImproperlyConfigured(
-                    "请检查settings.py的permission_service配置的%s是否正确" % path)
+                    "请检查settings.py的permission_service配置的%s是否正确" % self.PERMISSION_ADDRESS)
             data = response.json()
             if response.status_code == 500:
                 logger.error(data["message"])
