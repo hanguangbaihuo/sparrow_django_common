@@ -27,12 +27,12 @@ pip install requirements.txt
 #### 一、配置"dev"环境的支持
 > 提示：dev 环境下， 需要将权限验证服务转发到本地。
 
-> 1、权限验证服务转发到本地运行, 编辑项目下的 'dev.sh' 脚本， 添加：
+> 1、权限验证服务转发到本地运行：
 
-```sparrow-permissioin=$(kubectl get pods -n default | grep sparrow-permissioin | awk '{print "kubectl port-forward "$1 " 8001:8001 -n default"}')```
- 
-  
-> 2、 在终端运行dev.sh ,将服务转发到本地
+```
+kubectl get pods -n default | grep sparrow-permissioin | awk '{print "kubectl port-forward "$1 " 8001:8001 -n default"}' |sh
+```
+
 
 #### 二、配置PERMISSION_MIDDLEWARE需要的参数
 > 将以下参数添加到settings.py 
@@ -43,15 +43,17 @@ PERMISSION_MIDDLEWARE = {
     "PERMISSION_SERVICE":{
         "name": "sparrow-permission-svc", #服务名称（k8s上的服务名）
         "host": "127.0.0.1", #IP
-        "port": 8001, # 服务端口
+        "port": 8001, # 服务端口, dev环境需要注意， 配置写的端口需要和转发到本地的端口保持一致
         "address": "api/sparrow_permission/i/isassigned/", # url
     },
-    # consul服务的配置
-    "CONSUL": {
-        "host": "127.0.0.1", # ip
-        "port": 8500, # 端口
-    },
     "FILTER_PATH" : [''], # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
+}
+
+
+# 权限中间件需要到consul中去发现权限服务的地址， 所以需要配置consul服务的地址
+CONSUL_CLIENT_ADDR = {
+    "host": "127.0.0.1",
+    "port": 8500
 }
 ```
 
@@ -62,11 +64,12 @@ PERMISSION_MIDDLEWARE = {
         - host : 主机地址
         - port : 服务端口
         - address : 权限服务的path
-   -  CONSUL :  consul服务的配置
-        - host : 主机地址
-        - port : 端口
    -  FILTER_PATH : [] ,使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
    
+   
+-  CONSUL_CLIENT_ADDR： consul配置
+   - host : 主机地址
+   - port : 服务端口
    
 #### 注册 PERMISSION_MIDDLEWARE 
 > 注册中间件
