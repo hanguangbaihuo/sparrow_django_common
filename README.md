@@ -10,7 +10,7 @@ git+https://github.com/hanguangbaihuo/sparrow_django_common.git
 ```
 > 2. 在终端执行
 ```
-pip install requirements.txt
+pip install requirements_self.txt
 ```
 
 * * *
