@@ -60,16 +60,16 @@ CONSUL_CLIENT_ADDR = {
 > 描述
  - PERMISSION_MIDDLEWARE : 中间件配置
    -  PERMISSION_SERVICE ：权限验证配置
-        - name : 服务名称（k8s上的服务名）
-        - host : 主机地址
-        - port : 服务端口
-        - address : 权限服务的path
-   -  FILTER_PATH : [] ,使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
+        - name : 服务名称（k8s上的服务名， 必要配置）
+        - host : 主机地址(非必要配置，如果配置了，则走配置中的host， 不配置从consul中查找服务)
+        - port : 服务端口（必要配置）
+        - address : 权限服务的path（必要配置）
+   -  FILTER_PATH : [] ,使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中（非必要配置）
    
    
 -  CONSUL_CLIENT_ADDR： consul配置
-   - host : 主机地址
-   - port : 服务端口
+   - host : 主机地址（必要配置）
+   - port : 服务端口（必要配置）
    
 #### 注册 PERMISSION_MIDDLEWARE 
 > 注册中间件
