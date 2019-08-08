@@ -9,10 +9,11 @@ from sparrow_django_common.utils.validation_data import VerificationConfiguratio
 from sparrow_django_common.utils.consul_service import ConsulService
 from sparrow_django_common.utils.get_settings_value import GetSettingsValue
 from sparrow_django_common.utils.normalize_url import NormalizeUrl
+from sparrow_django_common.base_middlware.base_middleware import MiddlewareMixin
 logger = logging.getLogger(__name__)
 
 
-class PermissionMiddleware(permissions.BasePermission):
+class PermissionMiddleware(MiddlewareMixin):
     """
     权限中间件
     使用方法：
@@ -37,7 +38,7 @@ class PermissionMiddleware(permissions.BasePermission):
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
     HAS_PERMISSION = False
 
-    def has_permission(self, request, view):
+    def has_permission(self, request):
         # 验证中间件位置
         path = request.path
         method = request.method.upper()

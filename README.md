@@ -81,11 +81,8 @@ RUN_ENV = "dev"  # 开发：dev, 测试：test, 正式： pro
 #### 注册 PERMISSION_MIDDLEWARE 
 > 注册中间件
 ```
-REST_FRAMEWORK = {
-
-    'DEFAULT_PERMISSION_CLASSES': (
-        'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware',    #权限中间件
-    )
+MIDDLEWARE_CLASSES = {
+    'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware',    #权限中间件
 ```
 
 * * *
@@ -136,10 +133,8 @@ JWT_AUTHENTICATION_MIDDLEWARE = {
 
 > 注册中间件
 ```
-REST_FRAMEWORK{
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'sparrow_django_common.middleware.authentication.JWTAuthentication',
-    ),    
+MIDDLEWARE_CLASSES{
+    'sparrow_django_common.middleware.authentication.JWTAuthentication',   
     }
 ```
 
