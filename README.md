@@ -30,7 +30,8 @@ pip install requirements_self.txt
 > 1、权限验证服务转发到本地运行：
 
 ```
-kubectl get pods -n default | grep sparrow-permissioin | awk '{print "kubectl port-forward "$1 " 8001:8001 -n default"}' |sh
+permission=$(kubectl get pods -n default | grep sparrow-permissioin | awk '{print "kubectl port-forward "$1 " 8001:8001 -n default"}')
+exec $permission &
 ```
 
 
@@ -137,7 +138,8 @@ JWT_AUTHENTICATION_MIDDLEWARE = {
 ```
 REST_FRAMEWORK{
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'sparrow_django_common.middleware.authentication.JWTAuthentication',      
+        'sparrow_django_common.middleware.authentication.JWTAuthentication',
+    ),    
     }
 ```
 
