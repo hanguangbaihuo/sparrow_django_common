@@ -64,15 +64,11 @@ class PermissionMiddleware(permissions.BasePermission):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
         if all([path, method, user_id]):
             domain = ConsulService().get_service_addr_consul(service_dependencies='PERMISSION_MIDDLEWARE', service='PERMISSION_SERVICE')
-            url = self.URL_JOIN.normalize_url(
+            url_path = self.URL_JOIN.normalize_url(
                 domain=domain, path=self.PERMISSION_ADDRESS)
-            post_data = {
-                "path": path,
-                "method": method,
-                "user_id": user_id
-            }
+            url = url_path + '?userid={0}&path={1}&method={2}'.format(user_id, path, method)
             try:
-                response = requests.post(url, json=post_data)
+                response = requests.get(url)
             except Exception as ex:
                 logger.error(ex)
                 return True
