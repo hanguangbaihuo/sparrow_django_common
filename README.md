@@ -56,7 +56,7 @@ CONSUL_CLIENT_ADDR = {
     "port": 8500
 }
 ```
-
+RUN_ENV = "dev"  # 开发：dev, 测试：test, 正式： pro 
 > 描述
  - PERMISSION_MIDDLEWARE : 中间件配置
    -  PERMISSION_SERVICE ：权限验证配置
@@ -70,6 +70,10 @@ CONSUL_CLIENT_ADDR = {
 -  CONSUL_CLIENT_ADDR： consul配置
    - host : 主机地址（必要配置）
    - port : 服务端口（必要配置）
+
+
+-  RUN_ENV： 运行环境  （必要配置），如果不配置，开发环境会找不到PERMISSION服务
+
    
 #### 注册 PERMISSION_MIDDLEWARE 
 > 注册中间件
