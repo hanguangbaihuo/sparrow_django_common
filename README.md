@@ -137,7 +137,8 @@ JWT_AUTHENTICATION_MIDDLEWARE = {
 ```
 REST_FRAMEWORK{
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'sparrow_django_common.middleware.authentication.JWTAuthentication',      
+        'sparrow_django_common.middleware.authentication.JWTAuthentication',
+    ),    
     }
 ```
 
