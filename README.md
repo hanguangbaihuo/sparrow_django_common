@@ -55,8 +55,10 @@ CONSUL_CLIENT_ADDR = {
     "host": "127.0.0.1",
     "port": 8500
 }
-```
+
 RUN_ENV = "dev"  # 开发：dev, 测试：test, 正式： pro 
+```
+
 > 描述
  - PERMISSION_MIDDLEWARE : 中间件配置
    -  PERMISSION_SERVICE ：权限验证配置
