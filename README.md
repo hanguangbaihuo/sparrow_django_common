@@ -4,7 +4,7 @@
 * * *
 
 ## 安装中间件
-> 1. 在requirements.txt 中添加：
+> 1. 在项目目录下新建requirements_self.txt 中添加：
 ```
 git+https://github.com/hanguangbaihuo/sparrow_django_common.git
 ```
