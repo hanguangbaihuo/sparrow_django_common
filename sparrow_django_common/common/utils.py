@@ -5,7 +5,7 @@ from sparrow_django_common.utils.common_exceptions import AuthenticationValidErr
 import importlib
 import functools
 
-JWT_AUTHENTICATION_MIDDLEWARE = 'JWT_AUTHENTICATION_MIDDLEWARE'
+SPARROW_AUTHENTICATION = 'SPARROW_AUTHENTICATION'
 USER_CLASS_PATH = 'USER_CLASS_PATH'
 
 
@@ -13,7 +13,7 @@ def get_settings_value():
     """Get the data in settings and add value validation"""
     settings_value = GetSettingsValue()
     user_class_path = settings_value.get_middleware_value(
-        JWT_AUTHENTICATION_MIDDLEWARE, USER_CLASS_PATH)
+        SPARROW_AUTHENTICATION, USER_CLASS_PATH)
     return user_class_path
 
 

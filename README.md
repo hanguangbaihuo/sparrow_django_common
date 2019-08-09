@@ -81,11 +81,8 @@ RUN_ENV = "dev"  # 开发：dev, 测试：test, 正式： pro
 #### 注册 PERMISSION_MIDDLEWARE 
 > 注册中间件
 ```
-REST_FRAMEWORK = {
-
-    'DEFAULT_PERMISSION_CLASSES': (
-        'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware',    #权限中间件
-    )
+MIDDLEWARE_CLASSES = {
+    'sparrow_django_common.middleware.permission_middleware.PermissionMiddleware',    #权限中间件
 ```
 
 * * *
@@ -116,40 +113,54 @@ MIDDLEWARE_CLASSES = (
 
 * * *
 
-## JWT_AUTHENTICATION_MIDDLEWARE
+## JWTMiddleware
 > 描述：
 ```buildoutcfg
 
 ```
 
-#### 配置 JWT_AUTHENTICATION_MIDDLEWARE 中间件需要的参数
+#### 配置 JWTMiddleware 中间件需要的参数
 > 将以下参数添加到settings.py
 ```
-JWT_AUTHENTICATION_MIDDLEWARE = {
-    "JWT_SECRET": "问 tianyi",
-    "USER_CLASS_PATH": "sparrow_django_common.common.user.User", 
+JWT_MIDDLEWARE = {
+    "JWT_SECRET": "问 tianyi"
+}
+``` 
+>参数说明： JWT_SECRET : jwt_secret
+
+#### 注册 JWTMiddleware
+
+> 注册中间件
+```
+MIDDLEWARE_CLASSES = (
+    'sparrow_django_common.middleware.JWT_middleware.JWTMiddleware', 
+```
+
+
+ * * *
+
+
+ ## SparrowAuthentication
+
+ #### 配置 SparrowAuthentication 认证需要的参数(仅兼容django2.2以上版本)
+
+> 将以下参数添加到settings.py
+```
+SPARROW_AUTHENTICATION = {
+    "USER_CLASS_PATH": "sparrow_django_common.common.user.User",
 }
 ``` 
 > 参数说明： USER_CLASS_PATH： 路径中的User为中间件的User模版， 可以根据自己的需求重新创建User， 并将自己的User路径按照模版格式放到：USER_CLASS_PATH下 
 
-#### 注册 JWT_AUTHENTICATION_MIDDLEWARE
-
 > 注册中间件
 ```
-REST_FRAMEWORK{
+REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'sparrow_django_common.middleware.authentication.JWTAuthentication',
-    ),    
-    }
+        'sparrow_django_common.middleware.authentication.SparrowAuthentication',
+    )
+}
+
 ```
-
-
-
-
-
-
-
-
 
 
 

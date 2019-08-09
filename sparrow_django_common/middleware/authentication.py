@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class JWTAuthentication(object):
+class SparrowAuthentication(object):
 
     USER_CLASS = get_user_class()
 
@@ -18,18 +18,13 @@ class JWTAuthentication(object):
             if suc : return user
             if falied: return None
         '''
-        auth = get_authorization_header(request).split()
-        # 如果未认证, 返回空
-        if not auth or auth[0].lower() != b'token':
-            return None
         try:
-            token = auth[1]
-            payload = DecodeJwt().decode_jwt(token)
-            user_id = payload["uid"]
+            payload = request.META['payload']
+            user_id = request.META['REMOTE_USER']
             user = self.get_user(user_id, payload)
         except Exception as ex:
             logger.error(ex)
-            return (None, None)
+            return None
         return (user, payload)
 
     def get_user(self, user_id, payload):
