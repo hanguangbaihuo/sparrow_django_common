@@ -247,7 +247,7 @@ from django.test import TestCase
 from unittest import mock
 
 # 在测试方法中， 使用mock，把中间件的返回值修改
-@mock.patch('sparrow_django_common.middleware.permission_middleware.requests.get', return_value=mocked_requests_get)
+@mock.patch('sparrow_django_common.middleware.permission_middleware.PermissionMiddleware.valid_permission', return_value=True)
   
 
 ```
