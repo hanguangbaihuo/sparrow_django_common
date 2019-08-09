@@ -142,7 +142,7 @@ MIDDLEWARE_CLASSES = (
 
  ## SparrowAuthentication
 
- #### 配置 SparrowAuthentication 认证需要的参数
+ #### 配置 SparrowAuthentication 认证需要的参数(仅兼容django2.2以上版本)
 
 > 将以下参数添加到settings.py
 ```
