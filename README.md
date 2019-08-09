@@ -207,4 +207,53 @@ url = consul.get_service_addr_consul(service_dependencies='SERVICE_DEPENDENCIES'
 ```
 
 
+* * *
+
+## 测试示例一（mock中间件中的requests）
+```
+from django.test import TestCase
+from unittest import mock
+
+
+# 第一步：写一个mocked_requests_get类， 用于mock 权限中间件中用的 request 方法
+def mocked_requests_get(*args, **kwargs):
+
+    class MockResponse:
+
+        def __init__(self, json_data, status_code):
+            self.json_data = json_data
+            self.status_code = status_code
+
+        def json(self):
+            return self.json_data
+    # print(args[0])
+    # import pdb; pdb.set_trace()
+    if args[0].startswith('http://127.0.0.1:8001/api/sparrow_permission/i/isassigned/'):
+        return MockResponse({"status": False}, 200)
+    return MockResponse(None, 404)
+    
+    
+# 第二步， 在测试方法中， 使用mock，把中间件的返回值修改
+
+@mock.patch('sparrow_django_common.middleware.permission_middleware.requests.get', side_effect=mocked_requests_get)
+  
+
+```
+
+## 测试示例二（mock中间件中的返回， 有权限返回 true， 没有权限返回flase）
+
+```
+from django.test import TestCase
+from unittest import mock
+
+# 在测试方法中， 使用mock，把中间件的返回值修改
+@mock.patch('sparrow_django_common.middleware.permission_middleware.requests.get', return_value=mocked_requests_get)
+  
+
+```
+
+
+
+
+
 
