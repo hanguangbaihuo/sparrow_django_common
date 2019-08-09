@@ -20,7 +20,7 @@ class VerificationConfiguration(object):
         """验证中间件位置"""
         if not hasattr(request, 'user'):
             raise ImproperlyConfigured(
-                "PermissionMiddleware应该放置在'django.contrib.auth.middleware.AuthenticationMiddleware'后面")
+                "PermissionMiddleware应该放置在'sparrow_django_common.middleware.JWT_middleware.JWTMiddleware'后面")
 
     def valid_permission_svc(self):
         """settings配置数据校验"""

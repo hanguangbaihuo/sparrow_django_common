@@ -30,7 +30,7 @@ pip install requirements_self.txt
 > 1、权限验证服务转发到本地运行：
 
 ```
-permission=$(kubectl get pods -n default | grep sparrow-permissioin | awk '{print "kubectl port-forward "$1 " 8001:8001 -n default"}')
+permission=$(kubectl get pods -n default | grep sparrow-permissioin -m 1 | awk '{print "kubectl port-forward "$1 " 8001:8001 -n default"}')
 exec $permission &
 ```
 
@@ -43,7 +43,7 @@ PERMISSION_MIDDLEWARE = {
     # 权限验证服务的配置
     "PERMISSION_SERVICE":{
         "name": "sparrow-permission-svc", #服务名称（k8s上的服务名）
-        "host": "127.0.0.1", #IP
+        "host": "", #IP
         "port": 8001, # 服务端口, dev环境需要注意， 配置写的端口需要和转发到本地的端口保持一致
         "address": "api/sparrow_permission/i/isassigned/", # url
     },
@@ -164,7 +164,47 @@ REST_FRAMEWORK = {
 
 
 
+* * *
 
+## CONSUL_SERVICE  (以模块的方式使用)
+
+#### 依赖配置， 需放到setting.py 里面
+```
+# consul的地址
+CONSUL_CLIENT_ADDR = {
+    "host": "127.0.0.1",
+    "port": 8500
+},
+
+# consul服务需要知道当前开发环境，如果是开发环境， 需要发现的服务的host:prot会返回：127.0.0.1:8001
+RUN_ENV = "dev"  # 开发：dev, 测试：test, 正式： pro 
+```
+
+#### 在settings中配置需要发现的服务（如使用CONSUL_SERVICE， 请使用规定的格式）
+```
+ SERVICE_DEPENDENCIES = {  # 名称可修改
+    # 
+    "SPARROW_XX_SERVICE":{  # 名称可修改
+        "name": "", #服务名称（k8s上的服务名， 必要配置， 键不可修改）
+        "host": "", #IP（非必要配置， 键不可修改）
+        "port": 8001, # 服务端口, dev环境需要注意， 配置写的端口需要和转发到本地的端口保持一致（必要配置， 键不可修改）
+    }
+}
+
+```
+
+#### 使用示例：
+```
+from sparrow_django_common.utils.consul_service import ConsulService
+
+
+consul = ConsulService()
+# url返回 "host:prot"
+url = consul.get_service_addr_consul(service_dependencies='SERVICE_DEPENDENCIES',
+                                     service='SPARROW_XX_SERVICE')
+
+                              
+```
 
 
 
