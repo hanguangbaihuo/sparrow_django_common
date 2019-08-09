@@ -1,6 +1,7 @@
 import requests
 import logging
 
+from django.http import JsonResponse
 from django.core.exceptions import ImproperlyConfigured
 
 from rest_framework import permissions
@@ -36,30 +37,20 @@ class PermissionMiddleware(MiddlewareMixin):
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'name')
     PERMISSION_ADDRESS = SETTINGS_VALUE.get_middleware_service_value(
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
-    HAS_PERMISSION = False
+    HAS_PERMISSION = True
 
-    def has_permission(self, request):
+    def process_request(self, request):
         # 验证中间件位置
         path = request.path
         method = request.method.upper()
-        url = request.META.get('HTTP_REFERER', None)
         # 只校验有 不在 FILTER_PATH 中的url
         if path not in self.FILTER_PATH:
-            if request.user:
-                try:
-                    if request.user.is_authenticated():
-                        self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
-                except:
-                    if request.user.is_authenticated:
-                        self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
-            if self.HAS_PERMISSION:
-                return True
-            return False
-        elif url is not None:
-            if url.__contains__("login"):
-                return True
-            return False
-        return True
+            if request.META['REMOTE_USER']:
+                self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
+            if request.user.id:
+                self.HAS_PERMISSION = self.valid_permission(path, method, request.user.id)
+            if not self.HAS_PERMISSION:
+                return JsonResponse({"message": "无访问权限"}, status=403)
 
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
