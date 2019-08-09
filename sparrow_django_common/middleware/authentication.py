@@ -18,14 +18,16 @@ class SparrowAuthentication(object):
             if suc : return user
             if falied: return None
         '''
-        try:
-            payload = request.META['payload']
-            user_id = request.META['REMOTE_USER']
-            user = self.get_user(user_id, payload)
-        except Exception as ex:
-            logger.error(ex)
-            return None
-        return (user, payload)
+        payload = request.META['payload']
+        user_id = request.META['REMOTE_USER']
+        if payload and user_id:
+            try:
+                user = self.get_user(user_id, payload)
+            except Exception as ex:
+                logger.error(ex)
+                return None
+            return (user, payload)
+        return None
 
     def get_user(self, user_id, payload):
         user = self.USER_CLASS(user_id=user_id)
