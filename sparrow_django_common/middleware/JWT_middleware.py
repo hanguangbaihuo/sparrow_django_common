@@ -2,6 +2,7 @@
 from rest_framework.authentication import get_authorization_header
 from sparrow_django_common.common.decode_jwt import DecodeJwt
 from sparrow_django_common.base_middlware.base_middleware import MiddlewareMixin
+from django.http import JsonResponse
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,6 +30,5 @@ class JWTMiddleware(MiddlewareMixin):
             request.META['payload'] = payload
         except Exception as ex:
             logger.error(ex)
-            request.META['REMOTE_USER'] = None
-            request.META['payload'] = None
+            return JsonResponse({"message": "无效的token"}, status=401)
 

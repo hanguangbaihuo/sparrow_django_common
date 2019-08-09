@@ -4,8 +4,6 @@ import logging
 from django.http import JsonResponse
 from django.core.exceptions import ImproperlyConfigured
 
-from rest_framework import permissions
-
 from sparrow_django_common.utils.validation_data import VerificationConfiguration
 from sparrow_django_common.utils.consul_service import ConsulService
 from sparrow_django_common.utils.get_settings_value import GetSettingsValue
