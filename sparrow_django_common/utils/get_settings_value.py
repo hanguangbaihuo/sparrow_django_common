@@ -66,6 +66,27 @@ class GetSettingsValue(object):
         if value is None:
             raise NotImplementedError("没有配置这个参数%s" % service_name, key)
         return value
+
+    def __get_value(self, middleware_class, name):
+        """
+        获取中间件服务的配置数据,  PERMISSION_SERVICE 层数据， 不做任何验证
+        PERMISSION_MIDDLEWARE = {
+            "PERMISSION_SERVICE":{
+                "name": "",
+                "host": "",
+                "port": 8001,
+                "address": "",
+            },
+            "CONSUL": {
+                "host": "",
+                "port": ,
+                },
+            "FILTER_PATH" : ['']
+        }
+        """
+        service_value = self.__get_settings_value(middleware_class)
+        value = service_value.get(name, None)
+        return value
     
     def get_settings_value(self, name):
         """获取settings中的服务配置"""
@@ -86,3 +107,10 @@ class GetSettingsValue(object):
         """获取settings中middleware不验证"""
         value = self.__get_middleware_value_not_validated(middleware_class, service_name, key)
         return value
+
+    def get_value(self, middleware_class, name):
+        """获取中间件服务的值"""
+        value = self.__get_value(middleware_class, name)
+        return value
+
+    
