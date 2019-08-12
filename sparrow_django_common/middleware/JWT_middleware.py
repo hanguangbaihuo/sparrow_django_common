@@ -22,6 +22,7 @@ class JWTMiddleware(MiddlewareMixin):
         if not auth or auth[0].lower() != b'token':
             request.META['REMOTE_USER'] = None
             request.META['payload'] = None
+            return 
         try:
             token = auth[1]
             payload = DecodeJwt().decode_jwt(token)
