@@ -36,17 +36,19 @@ class PermissionMiddleware(MiddlewareMixin):
     PERMISSION_ADDRESS = SETTINGS_VALUE.get_middleware_service_value(
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
     HAS_PERMISSION = True
+    SKIPPED = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIPPED')
 
     def process_request(self, request):
         # 验证中间件位置
         path = request.path
         method = request.method.upper()
         # 只校验有 不在 FILTER_PATH 中的url
-        if path not in self.FILTER_PATH:
-            if request.META['REMOTE_USER']:
-                self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
-            if not self.HAS_PERMISSION:
-                return JsonResponse({"message": "无访问权限"}, status=403)
+        if self.SKIPPED is False:
+            if path not in self.FILTER_PATH:
+                if request.META['REMOTE_USER']:
+                    self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
+                if not self.HAS_PERMISSION:
+                    return JsonResponse({"message": "无访问权限"}, status=403)
 
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
