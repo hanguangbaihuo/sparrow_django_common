@@ -48,7 +48,7 @@ PERMISSION_MIDDLEWARE = {
         "address": "api/sparrow_permission/i/isassigned/", # url
     },
     "FILTER_PATH" : [''], # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
-    "SKIPPED": False, # 是否启用权限中间件， 不配置SKIPPED， 或者SKIPPED:True, 则跳过中间件， 如果SKIPPED:False，则不跳过中间件
+    "SKIP_PERMISSION": False, # 是否启用权限中间件， 不配置SKIP_PERMISSION， 或者SKIP_PERMISSION:True, 则跳过中间件， 如果SKIP_PERMISSION:False，则不跳过中间件
 }
 
 
