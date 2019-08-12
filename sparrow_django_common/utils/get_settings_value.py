@@ -85,7 +85,7 @@ class GetSettingsValue(object):
         }
         """
         service_value = self.__get_settings_value(middleware_class)
-        value = service_value.get(name, None)
+        value = service_value.get(name, False)
         return value
     
     def get_settings_value(self, name):
