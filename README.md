@@ -48,7 +48,6 @@ PERMISSION_MIDDLEWARE = {
         "address": "api/sparrow_permission/i/isassigned/", # url
     },
     "FILTER_PATH" : [''], # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
-    "SKIPPED": False, # 是否启用权限中间件， 不配置SKIPPED， 或者SKIPPED:True, 则跳过中间件， 如果SKIPPED:False，则不跳过中间件
 }
 
 
@@ -69,7 +68,6 @@ RUN_ENV = "dev"  # 开发：dev, 测试：test, 正式： pro
         - port : 服务端口（必要配置）
         - address : 权限服务的path（必要配置）
    -  FILTER_PATH : [] ,使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中（非必要配置）
-   -  SKIPPED : True/False   是否启用权限中间件， 不配置SKIPPED， 或者SKIPPED:True, 则跳过中间件， 如果SKIPPED:False，则不跳过中间件
    
    
 -  CONSUL_CLIENT_ADDR： consul配置
