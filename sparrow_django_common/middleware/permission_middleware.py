@@ -36,7 +36,7 @@ class PermissionMiddleware(MiddlewareMixin):
     PERMISSION_ADDRESS = SETTINGS_VALUE.get_middleware_service_value(
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
     HAS_PERMISSION = True
-    SKIP_PERMISSION = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIPPED')
+    SKIP_PERMISSION = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIP_PERMISSION')
 
     def process_request(self, request):
         # 验证中间件位置
