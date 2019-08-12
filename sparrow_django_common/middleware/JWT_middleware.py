@@ -30,5 +30,6 @@ class JWTMiddleware(MiddlewareMixin):
             request.META['payload'] = payload
         except Exception as ex:
             logger.error(ex)
-            return JsonResponse({"message": "无效的token"}, status=401)
+            request.META['REMOTE_USER'] = None
+            request.META['payload'] = None
 
