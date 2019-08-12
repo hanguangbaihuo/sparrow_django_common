@@ -36,14 +36,14 @@ class PermissionMiddleware(MiddlewareMixin):
     PERMISSION_ADDRESS = SETTINGS_VALUE.get_middleware_service_value(
         'PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE', 'address')
     HAS_PERMISSION = True
-    SKIPPED = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIPPED')
+    SKIP_PERMISSION = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIPPED')
 
     def process_request(self, request):
         # 验证中间件位置
         path = request.path
         method = request.method.upper()
         # 只校验有 不在 FILTER_PATH 中的url
-        if self.SKIPPED is False:
+        if self.SKIP_PERMISSION is False:
             if path not in self.FILTER_PATH:
                 if request.META['REMOTE_USER']:
                     self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
