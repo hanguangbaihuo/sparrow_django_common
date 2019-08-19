@@ -43,7 +43,7 @@ class PermissionMiddleware(MiddlewareMixin):
         path = request.path
         method = request.method.upper()
         # 只校验有 不在 FILTER_PATH 中的url
-        if self.SKIP_PERMISSION is False:
+        if self.SKIP_PERMISSION is False or self.SKIPPED == 'False':
             if path not in self.FILTER_PATH:
                 if request.META['REMOTE_USER']:
                     self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
